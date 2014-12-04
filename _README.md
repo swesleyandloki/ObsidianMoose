@@ -1,12 +1,12 @@
 # Project Name
 
-> Pithy project description
+> Dating Dashboard
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Sarah Wesley
+  - __Scrum Master__: Catherine Bui
+  - __Development Team Members__: Michael Ryan, Jonathan Ng
 
 ## Table of Contents
 
