@@ -28,7 +28,7 @@ angular.module('EAT', [
       
     })
     .state('likes', {
-      templateUrl:'likes.html',
+      templateUrl:'favorites.html',
       controller: 'ListController',
       url: '/likes',
       // authenticate: true
