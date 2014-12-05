@@ -25,7 +25,7 @@ angular.module('EAT', [
       templateUrl:'search.html',
       controller: 'SearchController',
       url: '/search',
-      // authenticate: true
+      
     })
     .state('likes', {
       templateUrl:'likes.html',
@@ -53,41 +53,75 @@ angular.module('EAT', [
     
   })
 
-.controller('SearchController', function($scope){
+//This controller is for our search ui-view and the searchResults ui-view:
+.controller('SearchController', function(Search, $scope){
+  //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
-  $scope.loc = loc;
+  $scope.loc = loc;  //loc is the geolocation stuff from above the angular module
+  $scope.foodBucket; //this is where our search results will go if our api query is successful
+  
+  //This posts the food obj to the server and returns our data from Yelp api: 
   $scope.feedMe = function(){
+  	// prepare obj to send to server:
   	var foodObj = {};
   	foodObj['search'] = $scope.search;
   	foodObj['stars'] = parseInt($scope.stars);
   	foodObj['distance'] = parseFloat($scope.distance);
   	foodObj['loc'] = $scope.loc;
   	console.log("I'm a food Object!", foodObj);
-  	state.go('searchResults');
-  // 	Search.add(foodObj);  //post method in factory FIX THE PROMISES!!!
-  // }
+  	// send obj to server:
+    Search.add(foodObj)  //post method in factory FIX THE PROMISES!!!
+  	.then(function(results){
+      console.log(results);
+      $scope.foodBucket = results; //put food in bucket on success
+  	  $state.go('searchResults'); //go to results display on success
+    })
+    .catch(function(err) {
+      console.log('No food in my bucket :('); //cry yourself to sleep if failure
+      //redirect to a searchWhoops page if this ever becomes not our fault all the time lol
+    });
+  };
+  
+  //This makes the star slider go:
   $scope.moStars = function(){ 
   	var num = parseInt($scope.stars) || 1;
   	console.log('NUMNUMNUM', num);
     return new Array(num);	
   }
   $scope.moStars();
-  $scope.displayResults = function(){
-    //todo: fix me!
-    // Search.get();  //get method in factory! FIX THE PROMISES!!!
-  };
+
 })
 
-.controller('AuthController', function($scope){
+.controller('AuthController', function(Auth, $scope){
+  // objects to send to server, each contain username and password keys:
   $scope.user = {};
   $scope.newUser = {};
   $scope.sendSignup = function(){
   	console.log($scope.newUser);
-  	//User.add($scope.newUser);  post method in factory!
+  	Auth.signup($scope.newUser)
+  	.then(function(results){
+      console.log(results);
+      //do I need to do something with a cookie or token here?
+  	  $state.go('likes'); //redirect to likes page
+    })
+    .catch(function(err) {
+      console.log('FAILED LOGIN'); //cry yourself to sleep if failure
+      //redirect to a signupWhoops page if this ever becomes not our fault all the time lol
+    });
   }
   $scope.sendLogin = function(){
   	console.log($scope.user);
-  	//User.add($scope.user);  post method in factory!
+  	Auth.login($scope.user)
+  	.then(function(results){
+      console.log(results);
+      //do I need to do something with a cookie or token here?
+  	  $state.go('likes'); //redirect to likes page
+    })
+    .catch(function(err) {
+      console.log('FAILED LOGIN'); //cry yourself to sleep if failure
+      //redirect to a loginWhoops page if this ever becomes not our fault all the time lol
+    });
+  	//User.add($scope.user);  post method in factory! FIX THE PROMISES!!!
   }
 })

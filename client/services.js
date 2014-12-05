@@ -2,18 +2,9 @@
 
 angular.module('EAT.services', [])
 
+//method used in app.js 'SeachController'
 .factory('Search', function ($http) {
   // Your code here
-  var get = function() {
-    return $http({
-      method: 'GET',
-      url: '/imhungry'
-    })
-    .then(function(resp){
-      console.log('RESPONDING',resp);
-      return resp.data;
-    });
-  };
   var add = function(foodObj) {
     console.log('this is a food obj',foodObj)
     return $http({
@@ -21,15 +12,54 @@ angular.module('EAT.services', [])
       url: '/imhungry',
       data: foodObj
     })
-    .then(function(){
-      console.log('HeyThere!');
+    .then(function(resp){
+      console.log('RESPONDING', resp);
+      return resp.data
     })
     .catch(function(err){
       console.log(err, 'CAUGHTCAUGHT!');
     });
   };
   return {
-    get: get,
     add: add
+  };
+})
+
+//method used in app.js 'AuthController'
+.factory('Auth', function ($http) {
+  // Your code here
+  var login = function(userObj) {
+    console.log('this is a userobj',userObj)
+    return $http({
+      method: 'POST',
+      url: '/login',
+      data: userObj
+    })
+    .then(function(resp){
+      console.log('RESPONDING', resp);
+      return resp.data
+    })
+    .catch(function(err){
+      console.log(err, 'CAUGHTCAUGHT!');
+    });
+  };
+  var signup = function(userObj) {
+    console.log('this is a userobj',userObj)
+    return $http({
+      method: 'POST',
+      url: '/signup',
+      data: userObj
+    })
+    .then(function(resp){
+      console.log('RESPONDING', resp);
+      return resp.data
+    })
+    .catch(function(err){
+      console.log(err, 'CAUGHTCAUGHT!');
+    });
+  };
+  return {
+    login: login,
+    signup: signup
   };
 })
