@@ -1,0 +1,6 @@
+<div ng-controller="SearchController">
+  <input ng-model="food.type" placeholder="Whatcha in the mood for?"/>
+  <input type="range" min="0" max="4" step="1" value="2" ng-model="food.cost"/>
+  <input type="range" min="0" max="5" step="0.1" value="2.5" ng-model="food.distance"/>
+  <button ng-click="feedMe()">FEED ME</button>
+</div>
