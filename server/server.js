@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var yelp = require('./yelp');
-//require request handler
 
 
 // serves static pages

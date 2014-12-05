@@ -2,10 +2,10 @@ var exports = module.exports = {};
 var helpers = require('./helpers.js');
 var _ = require('lodash');
 
-
 // Refer to Yelp API docs for more info: http://www.yelp.com/developers/documentation/v2/search_api
 
-//config file holds our secret keys you can't see, request your own from yelp
+
+//config file holds our secret keys you can't see, request your own from yelp and enter them in 'server/env/config.js'
 var yelp = require('./env/config');
 
 // requiring a Yelp npm module to easily query Yelp
@@ -14,13 +14,13 @@ var yelp = require("yelp").createClient(yelp.keys);
 
 
 // **test call**
-yelp.search({term: "burrito", location: "San Francisco", lat: 37.783548, lon: -122.408953, radius_filter: 5000, sort: 1, limit: 20}, function(error, data) {
-  if (error) {
-    console.log(error);
-  }
-  // console.log(data.businesses);
-  console.log(getsThreeClosestEateries(2, data.businesses));
-});
+// yelp.search({term: "burrito", location: "San Francisco", lat: 37.783548, lon: -122.408953, radius_filter: 5000, sort: 1, limit: 20}, function(error, data) {
+//   if (error) {
+//     console.log(error);
+//   }
+//   // console.log(data.businesses);
+//   console.log(getsThreeClosestEateries(2, data.businesses));
+// });
 
 
 
@@ -71,21 +71,6 @@ var getsThreeClosestEateries = function(usersStars, array) {
   });
   return results.slice(0,3);
 };
-
-
-
-
-
-
-
-
-
-
-// // See http://www.yelp.com/developers/documentation/v2/business
-// yelp.business("yelp-san-francisco", function(error, data) {
-//   console.log(error);
-//   console.log(data);
-// });
 
 
 exports.searchYelp = searchYelp;
