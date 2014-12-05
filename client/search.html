@@ -1,6 +1,11 @@
 <div ng-controller="SearchController">
-  <input ng-model="food.type" placeholder="Whatcha in the mood for?"/>
-  <input type="range" min="0" max="4" step="1" value="2" ng-model="food.cost"/>
-  <input type="range" min="0" max="5" step="0.1" value="2.5" ng-model="food.distance"/>
+  <input ng-model="search" placeholder="Whatcha in the mood for?"/>
+  <br></br>
+  <h3><span ng-repeat="i in moStars() track by $index">&#9733</span></h3>
+  <input ng-change="moStars()" type="range" min="1" max="5" step="1" value="3" ng-model="stars"/>
+  <br></br>
+  <h3>{{distance}} miles</h3><input type="range" min="0" max="5" step="0.1" value="2.5" ng-model="distance"/>
+  <br></br>
+
   <button ng-click="feedMe()">FEED ME</button>
 </div>
