@@ -23,6 +23,7 @@
     "lodash": "^2.4.1",
     "mongoose": "^3.8.20",
     "nodemon": "^1.2.1",
-    "passport": "^0.2.1"
+    "passport": "^0.2.1",
+    "yelp": "^0.1.1"
   }
 }
