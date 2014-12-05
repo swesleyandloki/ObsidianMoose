@@ -1,8 +1,8 @@
 var loc = {};
 
 var savePosition = function(position){
-  	loc.latitude = position.coords.latitude;
-  	loc.longitude = position.coords.longitude;
+  	loc.latitude = parseFloat(position.coords.latitude);
+  	loc.longitude = parseFloat(position.coords.longitude);
   }
   var logErr = function(){
   	console.log('BALLSBALLSBALLS');
@@ -58,7 +58,7 @@ angular.module('EAT', [
   //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
-  $scope.loc = loc;  //loc is the geolocation stuff from above the angular module
+  $scope.loc = "944 Market St, San Francisco, CA";  //loc should eventually be the geolocation stuff from above the angular module
   $scope.foodBucket; //this is where our search results will go if our api query is successful
   
   //This posts the food obj to the server and returns our data from Yelp api: 
