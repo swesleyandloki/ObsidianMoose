@@ -14,12 +14,11 @@ var yelp = require("yelp").createClient(yelp.keys);
 
 
 // **test call**
-// yelp.search({term: "burrito", location: "San Francisco", lat: 37.783548, lon: -122.408953, radius_filter: 5000, sort: 1, limit: 20}, function(error, data) {
+// yelp.search({term: "burrito", location: "944 Market St #8, San Francisco, CA 94102", radius_filter: 5000, sort: 1, limit: 20}, function(error, data) {
 //   if (error) {
 //     console.log(error);
 //   }
-//   // console.log(data.businesses);
-//   console.log(getsThreeClosestEateries(2, data.businesses));
+//   console.log(getsNineClosestEateries(2, data.businesses));
 // });
 
 
@@ -35,13 +34,13 @@ var searchYelp = function(search, location, distance, stars, req, res) {
   // limit = # of results; integer\
 
   distance = milesToMetersFloored(distance);
-  yelp.search({term: search, location: location, radius_filter: distance, sort: 1, limit: 15}, function(error, data) {
+  yelp.search({term: search, location: location, radius_filter: distance, sort: 1, limit: 30}, function(error, data) {
     if (error) {
       console.log(error);
     }
     // console.log(data.businesses);
     //pass in user's specified star rating for search
-    var businessJson = {businesses: getsThreeClosestEateries(stars, data.businesses)};
+    var businessJson = {businesses: getsNineClosestEateries(stars, data.businesses)};
     console.log(businessJson);
     helpers.sendResponse(res, businessJson, 200);
   });
@@ -56,7 +55,7 @@ var milesToMetersFloored = function(mileage) {
 
 
 
-var getsThreeClosestEateries = function(usersStars, array) {
+var getsNineClosestEateries = function(usersStars, array) {
   var results = [];
 
   _.each(array, function(restaurant) {
@@ -69,7 +68,7 @@ var getsThreeClosestEateries = function(usersStars, array) {
       });
     }
   });
-  return results.slice(0,3);
+  return results.slice(0,9);
 };
 
 
