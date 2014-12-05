@@ -11,11 +11,12 @@ app.use(express.static(__dirname + '/../client/'))
 
 // post request for food search. sends back top 3 results as JSON
 app.post('/imhungry', function (req, res) {
-  // var search = req.param('search');
-  // var location = req.param('location');
-  //...
+  var search = req.param('search');
+  var location = req.param('location');
+  var distance = req.param('distance');
+  var stars = req.param('stars');
 
-  //receivng json request from client with keys search, loc, distance, stars
+  //searches yelp, gets busineses and replies with reponse 200 and data
   yelp.searchYelp(search, location, distance, stars, req, res);
 });
 
