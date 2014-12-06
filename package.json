@@ -21,10 +21,12 @@
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "^0.6.1",
     "lodash": "^2.4.1",
+    "mongojs": "^0.17.0",
     "mongoose": "^3.8.20",
     "node-geocoder": "^2.11.1",
     "nodemon": "^1.2.1",
     "passport": "^0.2.1",
     "yelp": "^0.1.1"
+    "passport-local": "^1.0.0"
   }
 }
