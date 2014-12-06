@@ -49,7 +49,6 @@ angular.module('EAT', [
       controller: 'searchController',
       url: '/searchResults',
     })
-		
     
   })
 
@@ -58,9 +57,17 @@ angular.module('EAT', [
   //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
-  $scope.loc = "944 Market St, San Francisco, CA";  //loc should eventually be the geolocation stuff from above the angular module
+  $scope.loc = loc;  //loc should eventually be the geolocation stuff from above the angular module
   $scope.foodBucket; //this is where our search results will go if our api query is successful
-  
+  var bucket1 = $scope.foodBucket.slice(0,3);
+  var bucket2 = $scope.foodBucket.slice(3,6);
+  var bucket3 = $scope.foodBucket.slice(6);
+  $scope.currentBucket = bucket1;
+  $scope.changeBucket = function(){
+    if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
+    if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
+    if($scope.currentBucket===bucket3) $scope.currentBucket = bucket1;
+  };
   //This posts the food obj to the server and returns our data from Yelp api: 
   $scope.feedMe = function(){
   	// prepare obj to send to server:

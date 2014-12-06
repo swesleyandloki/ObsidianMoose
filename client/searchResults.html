@@ -1,8 +1,8 @@
 <!-- searchResults.html -->
-<div ng-repeat="foodPlace in foodBucket">
+<div ng-controller="SearchController" ng-repeat="foodPlace in currentBucket">
   <img height="100" width="100" source="EAT" src="{{foodPlace.image_url}}">
   <h2>{{foodPlace.name}}</h2>
   <h2>{{foodPlace.rating}} Stars</h2>
   <h3 ng-repeat="row in foodPlace.address">{{row}}</h3>
-  <button ng-click="nextThree()">FEED ME</button>
+  <button ng-click="changeBucket()">SEE MORE</button>
 </div>
