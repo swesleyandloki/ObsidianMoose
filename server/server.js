@@ -26,8 +26,16 @@ app.post('/imhungry', function (req, res) {
   var search = req.param('search');
   var distance = req.param('distance');
   var stars = req.param('stars');
-  var lat = req.param('location.latitude');
-  var lon = req.param('location.longitude');
+  var location = req.param('loc');
+  var lat = location.latitude;
+  var lon = location.longitude;
+  // var lon = req.param('loc.longitude');  
+
+  console.log(req.param('search'));
+  console.log(req.param('distance'));
+  console.log(req.param('stars'));
+  console.log(req.param('loc'));
+  // console.log(req.param('loc.longitude'));
 
   //searches yelp, gets businesses and replies with reponse 200 and data
   yelp.searchYelp(search, distance, stars, lat, lon, req, res);

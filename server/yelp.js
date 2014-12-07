@@ -24,7 +24,7 @@ var searchYelp = function(search, distance, stars, lat, lon, req, res) {
     // stars = user specified rating; integer
     // sort 1 = sort by distance; integer
     // limit = # of results; integer
-    yelp.search({term: search, location: address, radius_filter: distance, sort: 1, limit: 25}, function(error, data) {
+    yelp.search({term: search, location: address, radius_filter: distance, sort: 1, limit: 20}, function(error, data) {
       if (error) {
         console.log(error);
       }
