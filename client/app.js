@@ -27,12 +27,12 @@ angular.module('EAT', [
       url: '/search',
       
     })
-    .state('likes', {
-      templateUrl:'favorites.html',
-      controller: 'ListController',
-      url: '/likes',
-      // authenticate: true
-    })
+    // .state('likes', {
+    //   templateUrl:'likes.html',
+    //   controller: 'LikesController',
+    //   url: '/likes',
+    //   // authenticate: true
+    // })
     
     .state('login',{
       templateUrl:'login.html',
@@ -59,10 +59,10 @@ angular.module('EAT', [
   $scope.distance = '2.5';
   $scope.loc = loc;  //loc should eventually be the geolocation stuff from above the angular module
   $scope.foodBucket; //this is where our search results will go if our api query is successful
-  var bucket1 = $scope.foodBucket.slice(0,3);
-  var bucket2 = $scope.foodBucket.slice(3,6);
-  var bucket3 = $scope.foodBucket.slice(6);
-  $scope.currentBucket = bucket1;
+  // var bucket1 = $scope.foodBucket.slice(0,3);
+  // var bucket2 = $scope.foodBucket.slice(3,6);
+  // var bucket3 = $scope.foodBucket.slice(6);
+  // $scope.currentBucket = bucket1;
   $scope.changeBucket = function(){
     if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
     if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
