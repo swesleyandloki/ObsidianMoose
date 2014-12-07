@@ -35,15 +35,15 @@ app.post('/imhungry', function (req, res) {
 
 //handles login form
 //first argument of passport.authenticate is the strategy to use
-app.post('/login',
-	passport.authenticate('local', {
-		successRedirect: '/',
-		failureRedirect: '/login',
-		// failureFlash: true
-	})
-);
+// app.post('/login',
+// 	passport.authenticate('local', {
+// 		successRedirect: '/',
+// 		failureRedirect: '/login',
+// 		// failureFlash: true
+// 	})
+// );
 
-//takes an object of the form: {username: jon, password: 123}
+// //takes an object of the form: {username: jon, password: 123}
 app.post('/signup', function(req, res) {
 	//search to see if user already exists
 	db.findOne({username: req.body.username}, function(error, doc){
@@ -59,7 +59,7 @@ app.post('/signup', function(req, res) {
 
 //takes object of form {username: jon, restaurant: yum}
 //adds to likes if not already there
-app.post('/like', authHelpers.loggedIn, function(req, res, next){
+app.post('/like', function(req, res, next){
 	var username = req.body.username;
 	var restaurant = req.body.restaurant;
 	if (!db.isInLikes(username, restaurant)) {
@@ -71,7 +71,7 @@ app.post('/like', authHelpers.loggedIn, function(req, res, next){
 
 //takes object of form {username: jon, restaurant: yum}
 //adds to dislikes if not already there
-app.post('/dislike', authHelpers.loggedIn, function(req, res, next){
+app.post('/dislike', function(req, res, next){
 	var username = req.body.username;
 	var restaurant = req.body.restaurant;
 	if (!db.isInDislikes(username, restaurant)) {
@@ -90,18 +90,18 @@ app.listen(3000);
 
 
 
-app.get('/login', loggedIn, function(req, res, next) {
-    // req.user - will exist
-    // load user orders and render them
-});
+// app.get('/login', loggedIn, function(req, res, next) {
+//     // req.user - will exist
+//     // load user orders and render them
+// });
 
-app.get('/signup', loggedIn, function(req, res, next) {
-    // req.user - will exist
-    // load user orders and render them
-});
+// app.get('/signup', loggedIn, function(req, res, next) {
+//     // req.user - will exist
+//     // load user orders and render them
+// });
 
-app.get('/likes', loggedIn, function(req, res, next) {
-	res.redirect('/likes');
-    // req.user - will exist
-    // load user orders and render them
-});
+// app.get('/likes', loggedIn, function(req, res, next) {
+// 	res.redirect('/likes');
+//     // req.user - will exist
+//     // load user orders and render them
+// });
