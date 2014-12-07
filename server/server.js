@@ -89,7 +89,6 @@ app.listen(3000);
 
 
 
-
 // app.get('/login', loggedIn, function(req, res, next) {
 //     // req.user - will exist
 //     // load user orders and render them
