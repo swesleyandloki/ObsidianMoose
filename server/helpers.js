@@ -1,4 +1,4 @@
-var exports = exports.module = {};
+var exports = module.exports = {};
 
 var headers = {
   'access-control-allow-origin': '*',
