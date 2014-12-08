@@ -5,20 +5,25 @@ var db = mongojs('mydb', ['users']);
 
 //push a new user to the database using mongojs
 //obj comes in as : {username: username, password: password} and we add likes and dislikes arrays
-var addUserToDatabase = function(obj) {
-	obj.likes = [];
-	obj.dislikes = [];
-	db.users.save(obj);
+var addUserToDatabase = function(obj, callback) {
+	db.users.find({username: obj.username}, function(error, doc) {
+		if(!doc.length) {
+			obj.likes = [];
+			obj.dislikes = [];
+			db.users.insert(obj);
+			callback();
+		}
+	})
 };
 
 //push to likes
 //adds a restaurant to a user's likes array
-var addRestaurantToLikes = function(username, restaurantName) {
+var addRestaurantToLikes = function(username, restaurant) {
 	db.users.update({
 		username: username
 	}, {
 		$push: {
-			'likes': restaurantName
+			'likes': restaurant
 		}
 	}, function() {
 		//update complete
@@ -27,12 +32,12 @@ var addRestaurantToLikes = function(username, restaurantName) {
 
 //push to dislikes
 //adds a restaurant to a user's dislikes array
-var addRestaurantToDislikes = function(username, restaurantName) {
+var addRestaurantToDislikes = function(username, restaurant) {
 	db.users.update({
 		username: username
 	}, {
 		$push: {
-			'dislikes': restaurantName
+			'dislikes': restaurant
 		}
 	}, function() {
 		//update complete
@@ -41,51 +46,55 @@ var addRestaurantToDislikes = function(username, restaurantName) {
 
 //get likes
 //returns array of liked restaurants for a user
-var getLikes = function(username) {
+var getLikes = function(username, callback) {
 	db.users.findOne({
 		username: username
 	}, function(err, doc) {
 		//doc is the document that is found
 		//doc.likes is the array of restaurant names liked by the user
-		return doc.likes
+		callback(doc.likes);
 	});
 };
 
 //get likes
 //returns array of disliked restaurants for a user
-var getDislikes = function(username) {
+var getDislikes = function(username, callback) {
 	db.users.findOne({
 		username: username
 	}, function(err, doc) {
 		//doc is the document that is found
-		//doc.likes is the array of restaurant names liked by the user
-		return doc.dislikes
+		//doc.dislikes is the array of restaurant names liked by the user
+		callback(doc.dislikes);
 	});
 };
 
 
 //checks if a given restaurant is already in a user's likes
-var isInLikes = function(username, restaurant) {
+var isInLikes = function(username, restaurant, callback) {
 	var result = false;
-	var likes = getLikes(username);
-	for (var i = 0; i < likes.length; i++) {
-		if (likes[i] === restaurant){
-			result = true;
+	getLikes(username, function(likes){
+		console.log(likes);
+		for (var i = 0; i < likes.length; i++) {
+			if (likes[i] === restaurant){
+				result = true;
+			}
 		}
-	}
-	return result;
+		callback(result);
+	});
 };
 
 //checks if a given restaurant is already in a user's dislikes
-var isInDislikes = function(username, restaurant) {
+var isInDislikes = function(username, restaurant, callback) {
 	var result = false;
-	var dislikes = getDislikes(username);
-	for (var i = 0; i < dislikes.length; i++) {
-		if (dislikes[i] === restaurant){
-			result = true;
+	getDislikes(username, function(dislikes){
+		console.log(dislikes);
+		for (var i = 0; i < dislikes.length; i++) {
+			if (dislikes[i] === restaurant){
+				result = true;
+			}
 		}
-	}
-	return result;
+		callback(result);
+	});
 };
  
 module.exports = {
@@ -93,6 +102,8 @@ module.exports = {
 	addRestaurantToLikes: addRestaurantToLikes,
 	addRestaurantToDislikes: addRestaurantToDislikes,
 	getLikes: getLikes,
-	getDislikes: getDislikes
+	getDislikes: getDislikes,
+	isInLikes: isInLikes,
+	isInDislikes: isInDislikes
 };
 

@@ -51,44 +51,59 @@ app.post('/imhungry', function (req, res) {
 // 	})
 // );
 
-// //takes an object of the form: {username: jon, password: 123}
+// //takes an object of the form: {username: bob, password: 123}
 app.post('/signup', function(req, res) {
+	var userObject = {username: 'am', password: 1234} || req.body;
+	db.addUserToDatabase(userObject, function(){res.end('success')});
 	//search to see if user already exists
-	db.findOne({username: req.body.username}, function(error, doc){
-		//if not found, add to database, otherwise redirect to login page
-		if (!doc) {
-			db.addUserToDatabase(req.body);
-			res.send('');
-		} else {
-			throw error;
-		}
-	})
+});
+
+app.post('/login', function(req, res){
+	
 });
 
 //takes object of form {username: jon, restaurant: yum}
 //adds to likes if not already there
 app.post('/like', function(req, res, next){
-	var username = req.body.username;
-	var restaurant = req.body.restaurant;
-	if (!db.isInLikes(username, restaurant)) {
-		addRestaurantToLikes(username, restaurant)
-	} else {
-		console.log('already in likes');
-	}
+	console.log(req.body);
+	var username = req.body.username || 'kim';
+	var restaurant = req.body.restaurant || 'hi';
+	console.log(username, restaurant);
+	db.isInLikes(username, restaurant, function(result) {
+		if (!result) {
+			db.addRestaurantToLikes(username, restaurant)
+		} else {
+			console.log('already in likes')
+		}
+	});
 });
+
 
 //takes object of form {username: jon, restaurant: yum}
 //adds to dislikes if not already there
 app.post('/dislike', function(req, res, next){
-	var username = req.body.username;
-	var restaurant = req.body.restaurant;
-	if (!db.isInDislikes(username, restaurant)) {
-		addRestaurantToDislikes(username, restaurant)
-	} else {
-		console.log('already in likes');
-	}
+	console.log(req.body);
+	var username = req.body.username || 'kim';
+	var restaurant = req.body.restaurant || 'hi';
+	console.log(username, restaurant);
+	db.isInDislikes(username, restaurant, function(result) {
+		if (!result) {
+			db.addRestaurantToDislikes(username, restaurant)
+		} else {
+			console.log('already in dislikes')
+		}
+	});
 });
 
+app.get('/likes', function(req, res, next) {
+	var username = 'kim';
+	db.getLikes(username, function(likes) {res.send(likes)});
+});
+
+app.get('/dislikes', function(req, res, next) {
+	var username = 'kim';
+	db.getDislikes(username, function(dislikes) {res.send(dislikes)});
+});
 
 app.listen(3000);
 
@@ -103,12 +118,6 @@ app.listen(3000);
 // });
 
 // app.get('/signup', loggedIn, function(req, res, next) {
-//     // req.user - will exist
-//     // load user orders and render them
-// });
-
-// app.get('/likes', loggedIn, function(req, res, next) {
-// 	res.redirect('/likes');
 //     // req.user - will exist
 //     // load user orders and render them
 // });
