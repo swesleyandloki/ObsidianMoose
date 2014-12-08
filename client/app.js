@@ -113,11 +113,13 @@ angular.module('EAT', [
     console.log('tryin to change');
   };
 
-  $scope.tellUs = function(foodPlace){
+  $scope.tellUs = function(foodPlace, ind){
     console.log(foodPlace);
-    console.log($scope.like);
+    console.log('$INDEX', ind);
+    console.log('LIKES OBJ', $scope.likes);
+    console.log('LIKES $INDEx value', $scope.likes[ind]);
 
-    if($scope.likes){
+    if($scope.likes[ind]){
       console.log('there it is')
       Likes.addLike(foodPlace)
       .then(function(){
@@ -127,7 +129,7 @@ angular.module('EAT', [
         console.log('FAILED LIKING'); //cry yourself to sleep if failure
       });
     }
-    if($scope.dislikes){
+    if($scope.dislikes[ind]){
       Likes.addDislike(foodPlace)
       .then(function(){
         console.log('SUCCESS!!!');

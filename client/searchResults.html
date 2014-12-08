@@ -7,9 +7,9 @@
 	  <h2>{{foodPlace.name}}</h2>
 	  <h2>{{foodPlace.rating}} Stars</h2>
 	  <h3 ng-repeat="row in foodPlace.address">{{row}}</h3>
-	  <h3><input type="checkbox" ng-model="likes"> Add to Likes</h3>
-	  <h3><input type="checkbox" ng-model="dislikes"> Add to Dislikes</h3>
-	  <button ng-click="tellUs(currentBucket[$index])">TELL US!</button>
+	  <h3><input type="checkbox" ng-model="likes[$index]"> Add to Likes</h3>
+	  <h3><input type="checkbox" ng-model="dislikes[$index]"> Add to Dislikes</h3>
+	  <button ng-click="tellUs(currentBucket[$index], $index)">TELL US!</button>
 	</div>
 	  <button ng-click="changeBucket()">SEE MORE</button>
 </div>
