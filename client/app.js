@@ -59,32 +59,21 @@ angular.module('EAT', [
   $scope.distance = '2.5';
   $scope.loc = loc;  //loc should eventually be the geolocation stuff from above the angular module
   $scope.foodBucket; //this is where our search results will go if our api query is successful
-  //these buckets enable us to cycle through more choices
-  var bucket1 = $scope.foodBucket.slice(0,3);
-  var bucket2 = $scope.foodBucket.slice(3,6);
-  var bucket3 = $scope.foodBucket.slice(6);
-  //this initializes currentBucket so we'll only display the first 3 choices on page load
-  $scope.currentBucket = bucket1;
-  $scope.changeBucket = function(){
-    if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
-    if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
-    if($scope.currentBucket===bucket3) $scope.currentBucket = bucket1;
-  };
   //This posts the food obj to the server and returns our data from Yelp api: 
   $scope.feedMe = function(){
-  	// prepare obj to send to server:
-  	var foodObj = {};
-  	foodObj['search'] = $scope.search;
-  	foodObj['stars'] = parseInt($scope.stars);
-  	foodObj['distance'] = parseFloat($scope.distance);
-  	foodObj['loc'] = $scope.loc;
-  	console.log("I'm a food Object!", foodObj);
-  	// send obj to server:
+    // prepare obj to send to server:
+    var foodObj = {};
+    foodObj['search'] = $scope.search;
+    foodObj['stars'] = parseInt($scope.stars);
+    foodObj['distance'] = parseFloat($scope.distance);
+    foodObj['loc'] = $scope.loc;
+    console.log("I'm a food Object!", foodObj);
+    // send obj to server:
     Search.add(foodObj)  //post method in factory FIX THE PROMISES!!!
-  	.then(function(results){
+    .then(function(results){
       console.log(results);
       $scope.foodBucket = results; //put food in bucket on success
-  	  $state.go('searchResults'); //go to results display on success
+      $state.go('searchResults'); //go to results display on success
     })
     .catch(function(err) {
       console.log('No food in my bucket :('); //cry yourself to sleep if failure
@@ -94,11 +83,22 @@ angular.module('EAT', [
   
   //This makes the star slider go:
   $scope.moStars = function(){ 
-  	var num = parseInt($scope.stars) || 1;
-  	console.log('NUMNUMNUM', num);
-    return new Array(num);	
+    var num = parseInt($scope.stars) || 1;
+    console.log('NUMNUMNUM', num);
+    return new Array(num);  
   }
   $scope.moStars();
+  //these buckets enable us to cycle through more choices
+  // var bucket1 = $scope.foodBucket.slice(0,3);
+  // var bucket2 = $scope.foodBucket.slice(3,6);
+  // var bucket3 = $scope.foodBucket.slice(6);
+  //this initializes currentBucket so we'll only display the first 3 choices on page load
+  // $scope.currentBucket = bucket1;
+  $scope.changeBucket = function(){
+    if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
+    if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
+    if($scope.currentBucket===bucket3) $scope.currentBucket = bucket1;
+  };
 
   $scope.tellUs = function(foodPlace){
     if($scope.like){
@@ -109,7 +109,9 @@ angular.module('EAT', [
       .catch(function(err) {
         console.log('FAILED LIKING'); //cry yourself to sleep if failure
       });
+    }
     if($scope.dislike){
+      Likes.addDislike(foodPlace)
       .then(function(){
         console.log('SUCCESS!!!');
       })
@@ -118,19 +120,19 @@ angular.module('EAT', [
       });
     }
   }
-
 })
 
-.controller('LikesController', function(Likes, $scope){
+.controller('LikesController', function(Likes, Search, $scope){
   $scope.likeBucket;
   $scope.likes = function(){
     Likes.getLikes()
     .then(function(results){
       console.log(results);
       $scope.likeBucket = results;
+    })
     .catch(function(err) {
         console.log('FAILED LIKE GETTING'); //cry yourself to sleep if failure
-      });
+    });
   }
   $scope.likes();
 })
