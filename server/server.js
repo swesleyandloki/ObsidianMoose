@@ -54,6 +54,10 @@ app.post('/login', auth.login);
 app.post('/signup', auth.signup);
 app.get('/signedin', auth.checkAuth);
 
+app.post('/signin', auth.login);
+app.post('/signup', auth.signup);
+app.get('/signedin', auth.checkAuth);
+
 //takes object of form {username: jon, restaurant: yum}
 //adds to likes if not already there
 app.post('/like', function(req, res, next){
