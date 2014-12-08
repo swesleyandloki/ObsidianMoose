@@ -17,7 +17,7 @@ var addUserToDatabase = function(obj, callback) {
 					return next(err);
 				}
 
-				bcrypt.hash(user.password, salt, function(err, hash) {
+				bcrypt.hash(obj.password, salt, function(err, hash) {
 					if (err) {
 						return next(err);
 					}

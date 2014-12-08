@@ -8,17 +8,21 @@ var db = mongojs('mydb', ['users']);
 
 module.exports = {
   login: function (req, res, next) {
-    var username = req.body.username,
-        password = req.body.password;
-
+    var username = req.body.username;
+    var password = req.body.password;
+	var payload = {username: username};
     db.users.find({username: username}, function(err, doc) {
     	if (!doc.length) {
     		res.send('error');
     	} else {
-    		authHelpers.comparePasswords(password, doc.password, function(isMatch) {
+    		authHelpers.comparePasswords(password, doc[0].password, function(isMatch) {
     			if (isMatch) {
-    				var token = jwt.encode(doc, 'secret');
-    				res.json({token: token});
+    				var token = jwt.encode(payload, 'secret');
+    				console.log('1234567')
+    				res.json({
+    					token: token,
+    					username: username});
+					res.end('success');
     			}
     		});
     	}	

@@ -48,11 +48,9 @@ app.post('/imhungry', function (req, res) {
 // 	//search to see if user already exists
 // });
 
-app.post('/login', function(req, res){
-	
-});
 
-app.post('/signin', auth.login);
+
+app.post('/login', auth.login);
 app.post('/signup', auth.signup);
 app.get('/signedin', auth.checkAuth);
 

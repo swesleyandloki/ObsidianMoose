@@ -111,7 +111,7 @@ angular.module('EAT.services', [])
     })
     .then(function(resp){
       console.log('RESPONDING', resp);
-      return resp.data.token;
+      return resp.data;
     })
     .catch(function(err){
       console.log(err, 'CAUGHTCAUGHT!');
