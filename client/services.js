@@ -100,8 +100,8 @@ angular.module('EAT.services', [])
 })
 
 //method used in app.js 'AuthController'
-.factory('Auth', function ($http) {
-  // Your code here
+.factory('Auth', function ($http, $location, $window) {
+
   var login = function(userObj) {
     console.log('this is a userobj',userObj)
     return $http({
@@ -111,12 +111,13 @@ angular.module('EAT.services', [])
     })
     .then(function(resp){
       console.log('RESPONDING', resp);
-      return resp.data
+      return resp.data.token;
     })
     .catch(function(err){
       console.log(err, 'CAUGHTCAUGHT!');
     });
   };
+
   var signup = function(userObj) {
     console.log('this is a userobj',userObj)
     return $http({
@@ -126,14 +127,26 @@ angular.module('EAT.services', [])
     })
     .then(function(resp){
       console.log('RESPONDING', resp);
-      return resp.data
+      return resp.data.token;
     })
     .catch(function(err){
       console.log(err, 'CAUGHTCAUGHT!');
     });
   };
+
+  var isAuth = function () {
+    return !!$window.localStorage.getItem('com.eat');
+  };
+
+  var signout = function () {
+    $window.localStorage.removeItem('com.eat');
+    $location.path('/login');
+  };
+
   return {
     login: login,
-    signup: signup
+    signup: signup,
+    isAuth: isAuth,
+    signout: signout
   };
 })

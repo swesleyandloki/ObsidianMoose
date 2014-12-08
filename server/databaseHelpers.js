@@ -1,4 +1,6 @@
 var mongojs = require('mongojs');
+    bcrypt   = require('bcrypt'),
+    SALT_WORK_FACTOR  = 10;
 
 //first parameter is the name of the database, second is an array of collections
 var db = mongojs('mydb', ['users']);
@@ -8,10 +10,25 @@ var db = mongojs('mydb', ['users']);
 var addUserToDatabase = function(obj, callback) {
 	db.users.find({username: obj.username}, function(error, doc) {
 		if(!doc.length) {
-			obj.likes = [];
-			obj.dislikes = [];
-			db.users.insert(obj);
-			callback();
+
+			//generate a salt
+			bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+				if (err) {
+					return next(err);
+				}
+
+				bcrypt.hash(user.password, salt, function(err, hash) {
+					if (err) {
+						return next(err);
+					}
+					obj.password = hash;
+					obj.salt = salt;
+					obj.likes = [];
+					obj.dislikes = [];
+					db.users.insert(obj);
+					callback(obj);
+				})
+			})
 		}
 	})
 };

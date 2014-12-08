@@ -6,6 +6,8 @@ var geocoder = require('./geocoder');
 // var authHelpers = require('./authHelpers');
 var db = require('./databaseHelpers');
 var bodyParser = require('body-parser');
+var util = require('./authHelpers');
+var auth = require('./auth');
 
 // serves static pages
 // *********unsure if this will work with angular routing for views, not yet tested with client*******
@@ -14,10 +16,7 @@ app.use(express.static(__dirname + '/../client/'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use(passport.initialize());
-// app.use(passport.session());
 
-// app.use(express.session({secret: '12345'}));
 
 
 // post request for food search. sends back top 3 results as JSON
@@ -41,26 +40,21 @@ app.post('/imhungry', function (req, res) {
   yelp.searchYelp(search, distance, stars, lat, lon, req, res);
 });
 
-//handles login form
-//first argument of passport.authenticate is the strategy to use
-// app.post('/login',
-// 	passport.authenticate('local', {
-// 		successRedirect: '/',
-// 		failureRedirect: '/login',
-// 		// failureFlash: true
-// 	})
-// );
-
 // //takes an object of the form: {username: bob, password: 123}
-app.post('/signup', function(req, res) {
-	var userObject = {username: 'am', password: 1234} || req.body;
-	db.addUserToDatabase(userObject, function(){res.end('success')});
-	//search to see if user already exists
-});
+
+// app.post('/signup', function(req, res) {
+// 	var userObject = {username: 'am', password: 1234} || req.body;
+// 	db.addUserToDatabase(userObject, function(){res.end('success')});
+// 	//search to see if user already exists
+// });
 
 app.post('/login', function(req, res){
 	
 });
+
+app.post('/signin', auth.login);
+app.post('/signup', auth.signup);
+app.get('/signedin', auth.checkAuth);
 
 //takes object of form {username: jon, restaurant: yum}
 //adds to likes if not already there

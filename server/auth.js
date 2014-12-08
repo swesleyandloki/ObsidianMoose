@@ -1,65 +1,67 @@
-var db = require('./databaseHelpers');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var authHelpers = require('./authHelpers.js'),
+    Q    = require('q'),
+    jwt  = require('jwt-simple');
+    mongojs = require('mongojs');
+    dbHelpers = require('./databaseHelpers')
 
-//on sign up post request
-	//if username already exists
-		//send error
-	//if not, create a new entry in the database Users collection
+var db = mongojs('mydb', ['users']);
 
-//on login post request
-	//if username and password are correct
-		//log user in
-	//else error (server or username/password error)
+module.exports = {
+  login: function (req, res, next) {
+    var username = req.body.username,
+        password = req.body.password;
 
+    db.users.find({username: username}, function(err, doc) {
+    	if (!doc.length) {
+    		res.send('error');
+    	} else {
+    		authHelpers.comparePasswords(password, doc.password, function(isMatch) {
+    			if (isMatch) {
+    				var token = jwt.encode(doc, 'secret');
+    				res.json({token: token});
+    			}
+    		});
+    	}	
+    });
+  },
 
+  signup: function (req, res, next) {
+    var username  = req.body.username,
+        password  = req.body.password,
+        create,
+        newUser;
 
-app.get('/loginFailure', function(req, res, next){
-	res.send('Failed to authenticate');
-});
-
-app.get('/loginSuccess', function(req, res, next){
-	res.send('Successfully authenticated');
-});
-
-
-
-
-passport.use(new LocalStrategy(
-	function(username, password, done){
-		db.users.findOne({username: username}, function(err, user){
-			if (err) { return done(err); }
-			if (!user) {
-				return done(null, false, {message: 'Incorrect username.'});
-			}
-			if (!user.validPassword(password)){
-				return done(null, false, {message: 'Incorrect password.'})
-			}
-			return done(null, user);
-		})
-	}
-));
-
-//stores user information in the session
-//serializeUser takes a user object and stores any information you want in the session, when you return done(null, user)
-passport.serializeUser(function(user, done) {
-    console.log('serializeUser: ' + user._id)
-    done(null, user._id);
-});
-
-//deserializeUser takes the information stored in the session (sent by cookieSession in every request) 
-//and checks if the session is still valid for a user, 
-//if(!err) done(null,user) is true, keeps the user in the session, 
-//where else done(err,null) removes it from the session, 
-//redirecting you to whatever your app.get('/auth/:provider/callback') sends the user to after checking if the 
-//session is timed out or not. This should clarify things for your second question.
-
-passport.deserializeUser(function(id, done) {
-    db.users.findById(id, function(err, user){
-        console.log(user)
-        if(!err) done(null, user);
-        else done(err, null)  
+    // check to see if user already exists
+    db.users.find({username: username}, function(err, doc) {
+    	if (doc.length) {
+    		console.log('user already exists');
+    	} else {
+    		newUser = {username: username, password: password};
+    		dbHelpers.addUserToDatabase(newUser, function(user){
+    			var token = jwt.encode(user, 'secret');
+    			res.json({token: token}); 
+    			res.end('success')});
+    	}
     })
-});
+  },
 
-module.exports = passport;
+  checkAuth: function (req, res, next) {
+    // checking to see if the user is authenticated
+    // grab the token in the header is any
+    // then decode the token, which we end up being the user object
+    // check to see if that user exists in the database
+    var token = req.headers['x-access-token'];
+    if (!token) {
+      next(new Error('No token'));
+    } else {
+      var user = jwt.decode(token, 'secret');
+      db.users.find({username: user.username}, function(err, doc) {
+      	if (doc.length) {
+      		res.send(200);
+      	} else {
+      		res.send(401);
+      	}
+      })
+    }
+  }
+};
