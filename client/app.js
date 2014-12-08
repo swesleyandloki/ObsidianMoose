@@ -46,14 +46,14 @@ angular.module('EAT', [
     })
     .state('searchResults', {
       templateUrl:'searchResults.html',
-      controller: 'searchController',
+      controller: 'ResultsController',
       url: '/searchResults',
     })
     
   })
 
 //This controller is for our search ui-view and the searchResults ui-view:
-.controller('SearchController', function(Search, Likes, $scope){
+.controller('SearchController', function(Search, Likes, $scope, $state){
   //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
@@ -71,8 +71,6 @@ angular.module('EAT', [
     // send obj to server:
     Search.add(foodObj)  //post method in factory FIX THE PROMISES!!!
     .then(function(results){
-      console.log(results);
-      $scope.foodBucket = results; //put food in bucket on success
       $state.go('searchResults'); //go to results display on success
     })
     .catch(function(err) {
@@ -88,20 +86,39 @@ angular.module('EAT', [
     return new Array(num);  
   }
   $scope.moStars();
-  //these buckets enable us to cycle through more choices
-  // var bucket1 = $scope.foodBucket.slice(0,3);
-  // var bucket2 = $scope.foodBucket.slice(3,6);
-  // var bucket3 = $scope.foodBucket.slice(6);
-  //this initializes currentBucket so we'll only display the first 3 choices on page load
-  // $scope.currentBucket = bucket1;
+})
+  
+.controller('ResultsController', function(Search, Likes, $scope, $state){
+  $scope.foodBucket = Search.get();
+  $scope.likes = Likes.likes;
+  $scope.dislikes = Likes.dislikes;
+  $scope.bucket1 = $scope.foodBucket.slice(0,3);
+  $scope.bucket2 = $scope.foodBucket.slice(3,6);
+  $scope.bucket3 = $scope.foodBucket.slice(6,9);
+  $scope.currentBucket = $scope.bucket1;
   $scope.changeBucket = function(){
-    if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
-    if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
-    if($scope.currentBucket===bucket3) $scope.currentBucket = bucket1;
+    if($scope.currentBucket===$scope.bucket1){
+      $scope.currentBucket = $scope.bucket2;
+      console.log('under bucket reassignment', $scope.currentBucket);
+      $scope.$digest();
+    }
+    if($scope.currentBucket===$scope.bucket2){
+      $scope.currentBucket = $scope.bucket3;
+      $scope.$digest();
+    }
+    if($scope.currentBucket===$scope.bucket3){
+      $scope.currentBucket = $scope.bucket1;
+      $scope.$digest();
+    }
+    console.log('tryin to change');
   };
 
   $scope.tellUs = function(foodPlace){
-    if($scope.like){
+    console.log(foodPlace);
+    console.log($scope.like);
+
+    if($scope.likes){
+      console.log('there it is')
       Likes.addLike(foodPlace)
       .then(function(){
         console.log('SUCCESS!!!');
@@ -110,7 +127,7 @@ angular.module('EAT', [
         console.log('FAILED LIKING'); //cry yourself to sleep if failure
       });
     }
-    if($scope.dislike){
+    if($scope.dislikes){
       Likes.addDislike(foodPlace)
       .then(function(){
         console.log('SUCCESS!!!');
