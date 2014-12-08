@@ -27,12 +27,12 @@ angular.module('EAT', [
       url: '/search',
       
     })
-    // .state('likes', {
-    //   templateUrl:'likes.html',
-    //   controller: 'LikesController',
-    //   url: '/likes',
-    //   // authenticate: true
-    // })
+    .state('likes', {
+      templateUrl:'likes.html',
+      controller: 'LikesController',
+      url: '/likes',
+      // authenticate: true
+    })
     
     .state('login',{
       templateUrl:'login.html',
@@ -53,16 +53,18 @@ angular.module('EAT', [
   })
 
 //This controller is for our search ui-view and the searchResults ui-view:
-.controller('SearchController', function(Search, $scope){
+.controller('SearchController', function(Search, Likes, $scope){
   //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
   $scope.loc = loc;  //loc should eventually be the geolocation stuff from above the angular module
   $scope.foodBucket; //this is where our search results will go if our api query is successful
-  // var bucket1 = $scope.foodBucket.slice(0,3);
-  // var bucket2 = $scope.foodBucket.slice(3,6);
-  // var bucket3 = $scope.foodBucket.slice(6);
-  // $scope.currentBucket = bucket1;
+  //these buckets enable us to cycle through more choices
+  var bucket1 = $scope.foodBucket.slice(0,3);
+  var bucket2 = $scope.foodBucket.slice(3,6);
+  var bucket3 = $scope.foodBucket.slice(6);
+  //this initializes currentBucket so we'll only display the first 3 choices on page load
+  $scope.currentBucket = bucket1;
   $scope.changeBucket = function(){
     if($scope.currentBucket===bucket1) $scope.currentBucket = bucket2;
     if($scope.currentBucket===bucket2) $scope.currentBucket = bucket3;
@@ -98,6 +100,39 @@ angular.module('EAT', [
   }
   $scope.moStars();
 
+  $scope.tellUs = function(foodPlace){
+    if($scope.like){
+      Likes.addLike(foodPlace)
+      .then(function(){
+        console.log('SUCCESS!!!');
+      })
+      .catch(function(err) {
+        console.log('FAILED LIKING'); //cry yourself to sleep if failure
+      });
+    if($scope.dislike){
+      .then(function(){
+        console.log('SUCCESS!!!');
+      })
+      .catch(function(err) {
+        console.log('FAILED DISLIKING'); //cry yourself to sleep if failure
+      });
+    }
+  }
+
+})
+
+.controller('LikesController', function(Likes, $scope){
+  $scope.likeBucket;
+  $scope.likes = function(){
+    Likes.getLikes()
+    .then(function(results){
+      console.log(results);
+      $scope.likeBucket = results;
+    .catch(function(err) {
+        console.log('FAILED LIKE GETTING'); //cry yourself to sleep if failure
+      });
+  }
+  $scope.likes();
 })
 
 .controller('AuthController', function(Auth, $scope){

@@ -1,5 +1,10 @@
 <!-- likes.html -->
 
-<div ng-repeat="puppy in favorites">
-	
+<div ng-controller="LikesController">
+	<div ng-repeat="foodPlace in likeBucket">
+      <img height="100" width="100" source="EAT" src="{{foodPlace.image_url}}">
+	  <h2>{{foodPlace.name}}</h2>
+	  <h2>{{foodPlace.rating}} Stars</h2>
+	  <h3 ng-repeat="row in foodPlace.address">{{row}}</h3>
+	</div>
 </div>

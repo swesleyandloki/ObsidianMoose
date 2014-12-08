@@ -1,2 +1,0 @@
-searchResults.html
-<div></
