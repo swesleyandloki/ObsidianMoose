@@ -29,7 +29,7 @@ var searchYelp = function(search, distance, stars, lat, lon, req, res) {
         console.log(error);
       }
       var businessJson = {businesses: getsNineClosestEateries(stars, data.businesses)};
-      console.log('RESPONSE', businessJson);
+      // console.log('RESPONSE', businessJson);
       //send back success response with data
       helpers.sendResponse(res, businessJson, 200);
     });
