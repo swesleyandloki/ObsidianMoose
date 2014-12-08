@@ -1,8 +1,9 @@
 var exports = module.exports = {};
 
 exports.keys = {
-  consumer_key: "xxxxxx", 
-  consumer_secret: "xxxxx",
-  token: "xxxxx",
-  token_secret: "xxxxxx"
+  consumer_key: "xxxx", 
+  consumer_secret: "xxxx",
+  token: "xxxx",
+  token_secret: "xxxx"
 };
+
