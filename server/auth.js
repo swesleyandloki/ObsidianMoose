@@ -12,11 +12,11 @@ module.exports = {
     var password = req.body.password;
 	var payload = {username: username};
     db.users.find({username: username}, function(err, doc) {
-    	if (!doc.length) {
-    		res.send('error');
-    	} else {
+      if (!doc.length) {
+        res.send('error');
+      } else {
     		authHelpers.comparePasswords(password, doc[0].password, function(isMatch) {
-    			if (isMatch) {
+          if (isMatch) {
     				var token = jwt.encode(payload, 'secret');
     				console.log('1234567')
     				res.json({
