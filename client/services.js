@@ -5,6 +5,7 @@ angular.module('EAT.services', [])
 //method used in app.js 'SeachController'
 .factory('Search', function ($http) {
   // Your code here
+  var biznasses;
   var add = function(foodObj) {
     console.log('this is a food obj',foodObj)
     return $http({
@@ -14,20 +15,26 @@ angular.module('EAT.services', [])
     })
     .then(function(resp){
       console.log('RESPONDING', resp);
-      return resp.data
+      biznasses = resp.data.businesses;
     })
     .catch(function(err){
       console.log(err, 'CAUGHTCAUGHT!');
     });
-  };
+  }
+  var get = function() {
+    return biznasses;
+  }
   return {
-    add: add
+    add: add,
+    get: get
   };
 })
 
 //add methods used in app.js 'SearchController', gets used in 'LikesController'
 .factory('Likes', function ($http) {
   // Your code here
+  var likes = {};
+  var dislikes = {};
   var addLike = function(likesObj) {
     console.log('this is a likesObj',likesObj)
     return $http({
@@ -56,7 +63,7 @@ angular.module('EAT.services', [])
     });
   };
   var addDislike = function(likesObj) {
-    console.log('this is a likesObj',likesObj)
+    console.log('this is a dislikesObj',likesObj)
     return $http({
       method: 'POST',
       url: '/dislikes',
@@ -86,7 +93,9 @@ angular.module('EAT.services', [])
     addLike: addLike,
     getLikes: getLikes,
     addDislike: addDislike,
-    getDislike: getDislikes
+    getDislike: getDislikes,
+    likes: likes,
+    dislikes: dislikes
   };
 })
 
