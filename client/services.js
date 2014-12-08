@@ -54,7 +54,8 @@ angular.module('EAT.services', [])
     .catch(function(err){
       console.log(err, 'no incoming likes');
     });
-    var addDislike = function(likesObj) {
+  };
+  var addDislike = function(likesObj) {
     console.log('this is a likesObj',likesObj)
     return $http({
       method: 'POST',
@@ -85,7 +86,7 @@ angular.module('EAT.services', [])
     addLike: addLike,
     getLikes: getLikes,
     addDislike: addDislike,
-    getDislike: getDislike
+    getDislike: getDislikes
   };
 })
 
