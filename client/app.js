@@ -16,7 +16,8 @@ var savePosition = function(position){
 
 angular.module('EAT', [
   'ui.router',
-  'EAT.services'
+  'EAT.services',
+  'EAT.auth'
 ])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
@@ -52,7 +53,41 @@ angular.module('EAT', [
     })
     $urlRouterProvider.when('/','/search');
     
+    // We add our $httpInterceptor into the array
+    // of interceptors. Think of it like middleware for your ajax calls
+    $httpProvider.interceptors.push('AttachTokens');
   })
+.factory('AttachTokens', function ($window){
+  // this is an $httpInterceptor
+  // its job is to stop all out going request
+  // then look in local storage and find the user's token
+  // then add it to the header so the server can validate the request
+  var attach = {
+    request: function (object) {
+      var jwt = $window.localStorage.getItem('com.eat');
+      if (jwt) {
+        object.headers['x-access-token'] = jwt;
+      }
+      object.headers['Allow-Control-Allow-Origin'] = '*';
+      return object;
+    }
+  };
+  return attach;
+})
+.run(function($rootScope, $location, Auth){
+  // here inside the run phase of angular, our services and controllers
+  // have just been registered and our app is ready
+  // however, we want to make sure the user is authorized
+  // we listen for when angular is trying to change routes
+  // when it does change routes, we then look for the token in localstorage
+  // and send that token to the server to see if it is a real user or hasn't expired
+  // if it's not valid, we then redirect back to signin/signup
+  $rootScope.$on('$routeChangeStart', function(evt, next, current){
+    if (next.$$route && next.$$route.authenticate && !Auth.isAuth()) {
+      $location.path('/login')
+    }
+  })
+})
 
 //This controller is for our search ui-view and the searchResults ui-view:
 .controller('SearchController', function(Search, Likes, $scope, $state){
@@ -160,35 +195,35 @@ angular.module('EAT', [
   $scope.likes();
 })
 
-.controller('AuthController', function(Auth, $scope){
-  // objects to send to server, each contain username and password keys:
-  $scope.user = {};
-  $scope.newUser = {};
-  $scope.sendSignup = function(){
-  	console.log($scope.newUser);
-  	Auth.signup($scope.newUser)
-  	.then(function(results){
-      console.log(results);
-      //do I need to do something with a cookie or token here?
-  	  $state.go('likes'); //redirect to likes page
-    })
-    .catch(function(err) {
-      console.log('FAILED LOGIN'); //cry yourself to sleep if failure
-      //redirect to a signupWhoops page if this ever becomes not our fault all the time lol
-    });
-  }
-  $scope.sendLogin = function(){
-  	console.log($scope.user);
-  	Auth.login($scope.user)
-  	.then(function(results){
-      console.log(results);
-      //do I need to do something with a cookie or token here?
-  	  $state.go('likes'); //redirect to likes page
-    })
-    .catch(function(err) {
-      console.log('FAILED LOGIN'); //cry yourself to sleep if failure
-      //redirect to a loginWhoops page if this ever becomes not our fault all the time lol
-    });
-  	//User.add($scope.user);  post method in factory! FIX THE PROMISES!!!
-  }
-})
+// .controller('AuthController', function(Auth, $scope){
+//   // objects to send to server, each contain username and password keys:
+//   $scope.user = {};
+//   $scope.newUser = {};
+//   $scope.sendSignup = function(){
+//   	console.log($scope.newUser);
+//   	Auth.signup($scope.newUser)
+//   	.then(function(results){
+//       console.log(results);
+//       //do I need to do something with a cookie or token here?
+//   	  $state.go('likes'); //redirect to likes page
+//     })
+//     .catch(function(err) {
+//       console.log('FAILED LOGIN'); //cry yourself to sleep if failure
+//       //redirect to a signupWhoops page if this ever becomes not our fault all the time lol
+//     });
+//   }
+//   $scope.sendLogin = function(){
+//   	console.log($scope.user);
+//   	Auth.login($scope.user)
+//   	.then(function(results){
+//       console.log(results);
+//       //do I need to do something with a cookie or token here?
+//   	  $state.go('likes'); //redirect to likes page
+//     })
+//     .catch(function(err) {
+//       console.log('FAILED LOGIN'); //cry yourself to sleep if failure
+//       //redirect to a loginWhoops page if this ever becomes not our fault all the time lol
+//     });
+//   	//User.add($scope.user);  post method in factory! FIX THE PROMISES!!!
+//   }
+// })

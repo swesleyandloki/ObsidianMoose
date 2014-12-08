@@ -1,11 +1,16 @@
-var loggedIn = function(req, res, next) {
-    if (req.user) {
-        next();
+var bcrypt   = require('bcrypt'),
+    SALT_WORK_FACTOR  = 10;
+
+var comparePasswords = function (candidatePassword, savedPassword, callback) {
+  bcrypt.compare(candidatePassword, savedPassword, function (err, isMatch) {
+    if (err) {
+      console.log(error);
     } else {
-        res.redirect('/login');
+      callback(isMatch);
     }
+  });
 };
 
 module.exports = {
-	loggedIn: loggedIn
+	comparePasswords: comparePasswords
 };
