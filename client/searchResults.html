@@ -1,15 +1,21 @@
 <!-- searchResults.html -->
 <!-- move this all into another div for controller tagging -->
 
-<div ng-controller="ResultsController">
-	<div ng-repeat="foodPlace in currentBucket">
-	  <img height="100" width="100" source="EAT" src="{{foodPlace.image_url}}">
-	  <h2>{{foodPlace.name}}</h2>
-	  <h2>{{foodPlace.rating}} Stars</h2>
-	  <h3 ng-repeat="row in foodPlace.address">{{row}}</h3>
-	  <h3><input type="checkbox" ng-model="likes[$index]"> Add to Likes</h3>
-	  <h3><input type="checkbox" ng-model="dislikes[$index]"> Add to Dislikes</h3>
-	  <button ng-click="tellUs(currentBucket[$index], $index)">TELL US!</button>
-	</div>
-	  <button ng-click="changeBucket()">SEE MORE</button>
+<div ng-controller="ResultsController" id="resultsView">
+	<div ng-repeat="foodPlace in currentBucket" class="singleResult">
+		<div class="resultImgAndAddress">
+		  <img height="100" width="100" source="EAT" src="{{foodPlace.image_url}}">
+		  <div class="resultsAddressAndStars">
+			  <h2 class="restaurantName">{{foodPlace.name}}</h2>
+			  <h3 ng-repeat="row in foodPlace.address">{{row}}</h3>
+	  		<h2 class="resultRating">{{foodPlace.rating}} Stars</h2>
+		  </div>
+		</div>
+		<span class="likeFeature">
+		  <p><input type="checkbox" ng-model="likes[$index]">Like</p>
+		  <p><input type="checkbox" ng-model="dislikes[$index]">Dislike</p>
+	  	<button ng-click="tellUs(currentBucket[$index], $index)">Submit</button>
+		</div>
+	</span>
+	  <button ng-click="changeBucket()" id="refreshRestaurantsButton">Next three</button>
 </div>
