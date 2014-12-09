@@ -65,7 +65,7 @@ a {
   text-decoration: none;
   color: inherit;
 }
-input[type='range'], input[type="text"] {
+input[type='range'], input[type="text"], input[type="password"] {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   width: 80%;
@@ -174,10 +174,14 @@ button {
   background-color: #fc5120;
   display: block;
   position: relative;
-  left:39%;
+  left:41%;
 }
 button:focus {
   outline: none;
+}
+#feedMeButton {
+  position: relative;
+  left:39%;
 }
 #resultsView {
   font-weight: 300;
@@ -218,5 +222,5 @@ button:focus {
 }
 #refreshRestaurantsButton {
   position: relative;
-  left:38%;
+  left:36%;
 }
