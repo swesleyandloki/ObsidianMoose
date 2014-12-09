@@ -63,7 +63,8 @@ app.get('/signedin', auth.checkAuth);
 app.post('/like', function(req, res, next){
 	console.log(req.body);
 	var username = req.body.username || 'kim';
-	var restaurant = req.body.restaurant || 'hi';
+	console.log(1234, req.body.foodPlace)
+	var restaurant = req.body.foodPlace || 'hi there';
 	console.log(username, restaurant);
 	db.isInLikes(username, restaurant, function(result) {
 		if (!result) {
@@ -91,9 +92,13 @@ app.post('/dislike', function(req, res, next){
 	});
 });
 
-app.get('/likes', function(req, res, next) {
-	var username = 'kim';
-	db.getLikes(username, function(likes) {res.send(likes)});
+app.post('/likes', function(req, res, next) {
+	console.log('USERNAME', req.body.username);
+	var username = req.body.username || 'kim';
+	db.getLikes(username, function(likes) {
+		console.log('THESE ARE THE LIKES', likes);
+		res.send(likes);
+	});
 });
 
 app.get('/dislikes', function(req, res, next) {

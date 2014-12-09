@@ -14,7 +14,7 @@ angular.module('EAT.services', [])
       data: foodObj
     })
     .then(function(resp){
-      console.log('RESPONDING', resp);
+      console.log('RESPONDING', resp.data);
       biznasses = resp.data.businesses;
     })
     .catch(function(err){
@@ -39,7 +39,7 @@ angular.module('EAT.services', [])
     console.log('this is a likesObj',likesObj)
     return $http({
       method: 'POST',
-      url: '/likes',
+      url: '/like',
       data: likesObj
     })
     .then(function(resp){
@@ -49,14 +49,16 @@ angular.module('EAT.services', [])
       console.log(err, 'no like posted!');
     });
   };
-  var getLikes = function() {
+  var getLikes = function(likesObj) {
+    console.log('09887', likesObj)
     return $http({
-      method: 'GET',
-      url: '/likes'
+      method: 'POST',
+      url: '/likes',
+      data: likesObj
     })
     .then(function(resp){
       console.log('RESPONDING', resp);
-      return resp.data
+      return resp.data;
     })
     .catch(function(err){
       console.log(err, 'no incoming likes');
@@ -66,7 +68,7 @@ angular.module('EAT.services', [])
     console.log('this is a dislikesObj',likesObj)
     return $http({
       method: 'POST',
-      url: '/dislikes',
+      url: '/dislike',
       data: likesObj
     })
     .then(function(resp){

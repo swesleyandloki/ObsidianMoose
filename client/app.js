@@ -51,7 +51,7 @@ angular.module('EAT', [
       controller: 'ResultsController',
       url: '/searchResults',
     })
-    $urlRouterProvider.when('/','/search');
+    // $urlRouterProvider.when('/','/search');
     
     // We add our $httpInterceptor into the array
     // of interceptors. Think of it like middleware for your ajax calls
@@ -90,7 +90,7 @@ angular.module('EAT', [
 })
 
 //This controller is for our search ui-view and the searchResults ui-view:
-.controller('SearchController', function(Search, Likes, $scope, $state){
+.controller('SearchController', function(Search, $scope, $state){
   //This instantiates view so it looks pretty:
   $scope.stars = '3';
   $scope.distance = '2.5';
@@ -125,7 +125,7 @@ angular.module('EAT', [
   $scope.moStars();
 })
   
-.controller('ResultsController', function(Search, Likes, $scope, $state){
+.controller('ResultsController', function(Search, Likes, $scope, $state, $window){
   $scope.foodBucket = Search.get();
   $scope.likes = Likes.likes;
   $scope.dislikes = Likes.dislikes;
@@ -155,10 +155,11 @@ angular.module('EAT', [
     console.log('$INDEX', ind);
     console.log('LIKES OBJ', $scope.likes);
     console.log('LIKES $INDEx value', $scope.likes[ind]);
-
+    var likeObject = {username: $window.localStorage.getItem('username')};
+    likeObject.foodPlace = foodPlace;
     if($scope.likes[ind]){
       console.log('there it is')
-      Likes.addLike(foodPlace)
+      Likes.addLike(likeObject)
       .then(function(){
         console.log('SUCCESS!!!');
       })
@@ -168,7 +169,7 @@ angular.module('EAT', [
       $scope.likes[ind] = false;
     }
     if($scope.dislikes[ind]){
-      Likes.addDislike(foodPlace)
+      Likes.addDislike(likeObject)
       .then(function(){
         console.log('SUCCESS!!!');
       })
@@ -180,10 +181,12 @@ angular.module('EAT', [
   }
 })
 
-.controller('LikesController', function(Likes, Search, $scope){
+.controller('LikesController', function($window, Likes, Search, $scope){
   $scope.likeBucket;
-  $scope.likes = function(){
-    Likes.getLikes()
+  var likesObj = {username: $window.localStorage.getItem('username')};
+  $scope.likes = function(likesObj){
+    console.log('LIKESLIKESLIKES',likesObj);
+    Likes.getLikes(likesObj)
     .then(function(results){
       console.log(results);
       $scope.likeBucket = results;
@@ -192,7 +195,7 @@ angular.module('EAT', [
         console.log('FAILED LIKE GETTING'); //cry yourself to sleep if failure
     });
   }
-  $scope.likes();
+  $scope.likes(likesObj);
 })
 
 // .controller('AuthController', function(Auth, $scope){

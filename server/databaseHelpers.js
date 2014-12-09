@@ -69,6 +69,7 @@ var getLikes = function(username, callback) {
 	}, function(err, doc) {
 		//doc is the document that is found
 		//doc.likes is the array of restaurant names liked by the user
+		console.log('DOC', doc);
 		callback(doc.likes);
 	});
 };
